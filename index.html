@@ -1,739 +1,312 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Dimensional Breaker | 3D Printing & Craft Workshop</title>
-  <meta name="description" content="Dimensional Breaker is a not-for-profit 3D printing and craft workshop for ACG fans in the Bay Area. Free services for anime, manga, and gaming enthusiasts." />
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
-  <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-    :root {
-      --bg: #0e0e10;
-      --surface: #131315;
-      --surface-low: #1b1b1d;
-      --surface-mid: #201f21;
-      --surface-high: #2a2a2c;
-      --surface-top: #353437;
-      --on-surface: #e5e1e4;
-      --on-surface-dim: #b9cacb;
-      --outline: #849495;
-      --outline-dim: #3b494b;
-      --primary: #00f0ff;
-      --primary-dim: #00dbe9;
-      --primary-glow: rgba(0, 240, 255, 0.15);
-      --primary-glow-strong: rgba(0, 240, 255, 0.3);
-      --secondary: #ff4b89;
-      --secondary-glow: rgba(255, 75, 137, 0.2);
-      --tertiary: #adbac7;
-    }
-
-    html { scroll-behavior: smooth; }
-
-    body {
-      font-family: 'Inter', sans-serif;
-      background-color: var(--bg);
-      color: var(--on-surface);
-      min-height: 100vh;
-      overflow-x: hidden;
-      background-image:
-        linear-gradient(rgba(0,240,255,0.03) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(0,240,255,0.03) 1px, transparent 1px);
-      background-size: 32px 32px;
-    }
-
-    /* ─── NAVBAR ─── */
-    nav {
-      position: fixed;
-      top: 0; left: 0; right: 0;
-      z-index: 100;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0 40px;
-      height: 64px;
-      background: rgba(14, 14, 16, 0.85);
-      backdrop-filter: blur(20px);
-      border-bottom: 1px solid var(--outline-dim);
-    }
-
-    .nav-logo {
-      font-family: 'Space Grotesk', sans-serif;
-      font-weight: 700;
-      font-size: 1rem;
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
-      color: var(--primary);
-      text-shadow: 0 0 12px var(--primary-glow-strong);
-      text-decoration: none;
-    }
-
-    .nav-links {
-      display: flex;
-      gap: 32px;
-      list-style: none;
-    }
-
-    .nav-links a {
-      font-family: 'Inter', sans-serif;
-      font-size: 0.75rem;
-      font-weight: 700;
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-      color: var(--on-surface-dim);
-      text-decoration: none;
-      transition: color 0.2s, text-shadow 0.2s;
-    }
-
-    .nav-links a:hover {
-      color: var(--primary);
-      text-shadow: 0 0 8px var(--primary-glow-strong);
-    }
-
-    .nav-cta {
-      font-family: 'Inter', sans-serif;
-      font-size: 0.75rem;
-      font-weight: 700;
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-      color: var(--primary);
-      text-decoration: none;
-      border: 1px solid var(--primary);
-      padding: 8px 20px;
-      clip-path: polygon(8px 0%, 100% 0%, calc(100% - 8px) 100%, 0% 100%);
-      transition: background 0.2s, box-shadow 0.2s, color 0.2s;
-    }
-
-    .nav-cta:hover {
-      background: var(--primary);
-      color: #001a1c;
-      box-shadow: 0 0 20px var(--primary-glow-strong), 0 0 40px var(--primary-glow);
-    }
-
-    /* ─── HERO ─── */
-    .hero {
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      padding: 120px 40px 80px;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .hero::before {
-      content: '';
-      position: absolute;
-      top: 20%;
-      right: -200px;
-      width: 600px;
-      height: 600px;
-      background: radial-gradient(circle, rgba(0,240,255,0.06) 0%, transparent 70%);
-      pointer-events: none;
-    }
-
-    .hero::after {
-      content: '';
-      position: absolute;
-      bottom: 10%;
-      left: -100px;
-      width: 400px;
-      height: 400px;
-      background: radial-gradient(circle, rgba(255,75,137,0.05) 0%, transparent 70%);
-      pointer-events: none;
-    }
-
-    .hero-label {
-      font-family: 'Inter', sans-serif;
-      font-size: 0.75rem;
-      font-weight: 700;
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-      color: var(--primary);
-      margin-bottom: 24px;
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-
-    .hero-label::before {
-      content: '';
-      display: block;
-      width: 40px;
-      height: 1px;
-      background: var(--primary);
-      box-shadow: 0 0 6px var(--primary);
-    }
-
-    .hero h1 {
-      font-family: 'Space Grotesk', sans-serif;
-      font-size: clamp(3rem, 8vw, 6rem);
-      font-weight: 700;
-      line-height: 1.05;
-      letter-spacing: -0.02em;
-      color: var(--on-surface);
-      margin-bottom: 8px;
-    }
-
-    .hero h1 span {
-      color: var(--primary);
-      text-shadow: 0 0 30px var(--primary-glow-strong);
-    }
-
-    .hero-sub {
-      font-family: 'Space Grotesk', sans-serif;
-      font-size: clamp(1.5rem, 4vw, 2.5rem);
-      font-weight: 300;
-      color: var(--tertiary);
-      margin-bottom: 32px;
-      letter-spacing: -0.01em;
-    }
-
-    .hero-bio {
-      max-width: 600px;
-      font-size: 1.125rem;
-      line-height: 1.6;
-      color: var(--on-surface-dim);
-      margin-bottom: 48px;
-    }
-
-    .hero-actions {
-      display: flex;
-      gap: 16px;
-      flex-wrap: wrap;
-    }
-
-    .btn-primary {
-      font-family: 'Inter', sans-serif;
-      font-size: 0.75rem;
-      font-weight: 700;
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-      color: #001a1c;
-      background: var(--primary);
-      text-decoration: none;
-      padding: 14px 32px;
-      clip-path: polygon(12px 0%, 100% 0%, calc(100% - 12px) 100%, 0% 100%);
-      transition: box-shadow 0.2s, transform 0.2s;
-      display: inline-block;
-    }
-
-    .btn-primary:hover {
-      box-shadow: 0 0 30px var(--primary-glow-strong), 0 0 60px var(--primary-glow);
-      transform: translateY(-2px);
-    }
-
-    .btn-secondary {
-      font-family: 'Inter', sans-serif;
-      font-size: 0.75rem;
-      font-weight: 700;
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-      color: var(--on-surface-dim);
-      background: transparent;
-      text-decoration: none;
-      padding: 14px 32px;
-      border: 1px solid var(--outline-dim);
-      clip-path: polygon(12px 0%, 100% 0%, calc(100% - 12px) 100%, 0% 100%);
-      transition: border-color 0.2s, color 0.2s;
-      display: inline-block;
-    }
-
-    .btn-secondary:hover {
-      border-color: var(--primary);
-      color: var(--primary);
-    }
-
-    /* ─── DIVIDER ─── */
-    .breaker {
-      height: 2px;
-      background: var(--outline-dim);
-      margin: 0 40px;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .breaker::after {
-      content: '';
-      position: absolute;
-      top: 0; left: -20%;
-      width: 20%;
-      height: 100%;
-      background: linear-gradient(90deg, transparent, var(--primary), transparent);
-      animation: pulse-line 3s ease-in-out infinite;
-    }
-
-    @keyframes pulse-line {
-      0% { left: -20%; }
-      100% { left: 120%; }
-    }
-
-    /* ─── SECTIONS ─── */
-    section {
-      padding: 80px 40px;
-    }
-
-    .section-label {
-      font-family: 'Inter', sans-serif;
-      font-size: 0.75rem;
-      font-weight: 700;
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-      color: var(--secondary);
-      margin-bottom: 16px;
-    }
-
-    .section-title {
-      font-family: 'Space Grotesk', sans-serif;
-      font-size: clamp(1.8rem, 4vw, 3rem);
-      font-weight: 700;
-      line-height: 1.2;
-      letter-spacing: -0.01em;
-      color: var(--on-surface);
-      margin-bottom: 48px;
-    }
-
-    /* ─── ABOUT SECTION ─── */
-    .about-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 2px;
-      max-width: 1200px;
-    }
-
-    @media (max-width: 768px) {
-      .about-grid { grid-template-columns: 1fr; }
-      nav { padding: 0 20px; }
-      .hero { padding: 100px 20px 60px; }
-      section { padding: 60px 20px; }
-      .breaker { margin: 0 20px; }
-    }
-
-    .glass-panel {
-      background: rgba(32, 31, 33, 0.6);
-      backdrop-filter: blur(20px);
-      border: 1px solid var(--outline-dim);
-      padding: 32px;
-      transition: border-color 0.3s, box-shadow 0.3s, transform 0.3s;
-    }
-
-    .glass-panel:hover {
-      border-color: rgba(0, 240, 255, 0.3);
-      box-shadow: 0 0 20px rgba(0,240,255,0.05);
-      transform: translateY(-2px);
-    }
-
-    .panel-label {
-      font-family: 'Inter', sans-serif;
-      font-size: 0.75rem;
-      font-weight: 700;
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-      color: var(--primary);
-      margin-bottom: 12px;
-    }
-
-    .panel-title {
-      font-family: 'Space Grotesk', sans-serif;
-      font-size: 1.5rem;
-      font-weight: 600;
-      letter-spacing: 0.05em;
-      text-transform: uppercase;
-      color: var(--on-surface);
-      margin-bottom: 16px;
-    }
-
-    .panel-body {
-      font-size: 1rem;
-      line-height: 1.6;
-      color: var(--on-surface-dim);
-    }
-
-    .panel-stat {
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-      margin-top: 24px;
-    }
-
-    .stat-value {
-      font-family: 'Space Grotesk', sans-serif;
-      font-size: 2.5rem;
-      font-weight: 700;
-      color: var(--primary);
-      text-shadow: 0 0 20px var(--primary-glow-strong);
-    }
-
-    .stat-label {
-      font-family: 'Inter', sans-serif;
-      font-size: 0.75rem;
-      font-weight: 700;
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-      color: var(--outline);
-    }
-
-    /* ─── SPECS ─── */
-    #specs { background: transparent; }
-
-    .specs-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-      gap: 2px;
-      max-width: 1200px;
-    }
-
-    .spec-chip {
-      font-family: 'Inter', sans-serif;
-      font-size: 0.75rem;
-      font-weight: 700;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      background: rgba(0,240,255,0.08);
-      border: 1px solid var(--primary);
-      color: var(--primary);
-      padding: 4px 12px;
-      display: inline-block;
-      clip-path: polygon(6px 0%, 100% 0%, calc(100% - 6px) 100%, 0% 100%);
-      margin-bottom: 16px;
-    }
-
-    /* ─── QUOTE ─── */
-    .quote-block {
-      max-width: 800px;
-      margin: 0 auto;
-      text-align: center;
-      padding: 80px 40px;
-    }
-
-    .quote-text {
-      font-family: 'Space Grotesk', sans-serif;
-      font-size: clamp(1.2rem, 3vw, 1.8rem);
-      font-weight: 400;
-      line-height: 1.5;
-      color: var(--on-surface-dim);
-      font-style: italic;
-      margin-bottom: 24px;
-    }
-
-    .quote-text strong {
-      color: var(--primary);
-      font-style: normal;
-      text-shadow: 0 0 12px var(--primary-glow-strong);
-    }
-
-    .quote-attr {
-      font-family: 'Inter', sans-serif;
-      font-size: 0.75rem;
-      font-weight: 700;
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-      color: var(--outline);
-    }
-
-    /* ─── DISCLAIMER ─── */
-    .disclaimer {
-      background: rgba(255,75,137,0.05);
-      border: 1px solid rgba(255,75,137,0.2);
-      border-left: 3px solid var(--secondary);
-      padding: 20px 24px;
-      margin-top: 32px;
-      max-width: 800px;
-    }
-
-    .disclaimer p {
-      font-size: 0.9rem;
-      color: var(--on-surface-dim);
-      line-height: 1.6;
-    }
-
-    .disclaimer strong {
-      color: var(--secondary);
-    }
-
-    /* ─── CTA SECTION ─── */
-    #request {
-      text-align: center;
-      padding: 100px 40px;
-      position: relative;
-    }
-
-    #request::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: radial-gradient(ellipse at center, rgba(0,240,255,0.04) 0%, transparent 70%);
-      pointer-events: none;
-    }
-
-    .cta-title {
-      font-family: 'Space Grotesk', sans-serif;
-      font-size: clamp(2rem, 5vw, 4rem);
-      font-weight: 700;
-      line-height: 1.1;
-      letter-spacing: -0.02em;
-      color: var(--on-surface);
-      margin-bottom: 16px;
-    }
-
-    .cta-title span {
-      color: var(--primary);
-      text-shadow: 0 0 30px var(--primary-glow-strong);
-    }
-
-    .cta-sub {
-      font-size: 1.125rem;
-      color: var(--on-surface-dim);
-      margin-bottom: 48px;
-      max-width: 500px;
-      margin-left: auto;
-      margin-right: auto;
-    }
-
-    /* ─── GALLERY ─── */
-    #gallery {
-      padding: 80px 40px;
-    }
-
-    .gallery-placeholder {
-      border: 1px dashed var(--outline-dim);
-      padding: 60px;
-      text-align: center;
-      color: var(--outline);
-      font-family: 'Inter', sans-serif;
-      font-size: 0.9rem;
-      letter-spacing: 0.05em;
-    }
-
-    /* ─── ABOUT ─── */
-    #about { padding: 80px 40px; }
-
-    /* ─── FOOTER ─── */
-    footer {
-      border-top: 1px solid var(--outline-dim);
-      padding: 40px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      flex-wrap: gap;
-      gap: 24px;
-    }
-
-    .footer-logo {
-      font-family: 'Space Grotesk', sans-serif;
-      font-weight: 700;
-      font-size: 0.875rem;
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
-      color: var(--primary);
-    }
-
-    .footer-links {
-      display: flex;
-      gap: 24px;
-      flex-wrap: wrap;
-    }
-
-    .footer-links a {
-      font-family: 'Inter', sans-serif;
-      font-size: 0.75rem;
-      font-weight: 700;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      color: var(--outline);
-      text-decoration: none;
-      transition: color 0.2s;
-    }
-
-    .footer-links a:hover { color: var(--primary); }
-
-    .footer-copy {
-      font-family: 'Inter', sans-serif;
-      font-size: 0.75rem;
-      color: var(--outline);
-      letter-spacing: 0.05em;
-    }
-
-    /* ─── ANIMATIONS ─── */
-    @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(24px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
-
-    .fade-up {
-      opacity: 0;
-      animation: fadeUp 0.7s ease forwards;
-    }
-
-    .delay-1 { animation-delay: 0.1s; }
-    .delay-2 { animation-delay: 0.2s; }
-    .delay-3 { animation-delay: 0.35s; }
-    .delay-4 { animation-delay: 0.5s; }
-    .delay-5 { animation-delay: 0.65s; }
-
-    /* scan line effect */
-    body::after {
-      content: '';
-      position: fixed;
-      inset: 0;
-      background: repeating-linear-gradient(
-        0deg,
-        transparent,
-        transparent 2px,
-        rgba(0,0,0,0.03) 2px,
-        rgba(0,0,0,0.03) 4px
-      );
-      pointer-events: none;
-      z-index: 999;
-    }
-  </style>
+<!DOCTYPE html><html class="dark" lang="en" style=""><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700;800;900&amp;family=Inter:wght@300;400;500;600;700;800&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<style>
+        body {
+            background-color: #131315;
+            background-image: 
+                linear-gradient(rgba(0, 240, 255, 0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 240, 255, 0.05) 1px, transparent 1px);
+            background-size: 32px 32px;
+        }
+        .glass-panel {
+            backdrop-filter: blur(20px);
+            background: rgba(27, 27, 29, 0.7);
+        }
+        .energy-pulse {
+            position: relative;
+            overflow: hidden;
+        }
+        .energy-pulse::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 50%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 240, 255, 0.4), transparent);
+            animation: pulse 4s infinite linear;
+        }
+        @keyframes pulse {
+            0% { left: -100%; }
+            100% { left: 200%; }
+        }
+        .mecha-clip {
+            clip-path: polygon(0 0, 100% 0, 100% 85%, 85% 100%, 0 100%);
+        }
+    </style>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                "inverse-on-surface": "#313032",
+                "on-primary-fixed-variant": "#004f54",
+                "error": "#ffb4ab",
+                "on-tertiary-fixed": "#101d26",
+                "surface-container-highest": "#353437",
+                "surface-dim": "#131315",
+                "inverse-primary": "#006970",
+                "on-primary-container": "#006970",
+                "on-primary": "#00363a",
+                "surface-container-low": "#1b1b1d",
+                "tertiary": "#f0f7ff",
+                "primary-fixed-dim": "#00dbe9",
+                "outline": "#849495",
+                "primary": "#dbfcff",
+                "secondary-fixed-dim": "#ffb1c3",
+                "on-tertiary-fixed-variant": "#3c4853",
+                "on-tertiary-container": "#54606c",
+                "error-container": "#93000a",
+                "surface-bright": "#39393b",
+                "on-secondary-container": "#590026",
+                "inverse-surface": "#e5e1e4",
+                "tertiary-fixed-dim": "#bbc8d5",
+                "on-primary-fixed": "#002022",
+                "on-secondary-fixed": "#3f0019",
+                "background": "#131315",
+                "secondary-fixed": "#ffd9e0",
+                "tertiary-fixed": "#d7e4f2",
+                "on-secondary": "#66002c",
+                "secondary-container": "#ff4b89",
+                "on-surface": "#e5e1e4",
+                "on-tertiary": "#25323c",
+                "on-error": "#690005",
+                "surface-container": "#201f21",
+                "primary-fixed": "#7df4ff",
+                "tertiary-container": "#cedbe8",
+                "surface-container-high": "#2a2a2c",
+                "on-error-container": "#ffdad6",
+                "on-background": "#e5e1e4",
+                "secondary": "#ffb1c3",
+                "on-secondary-fixed-variant": "#8f0041",
+                "outline-variant": "#3b494b",
+                "surface": "#131315",
+                "on-surface-variant": "#b9cacb",
+                "surface-container-lowest": "#0e0e10",
+                "surface-variant": "#353437",
+                "primary-container": "#00f0ff",
+                "surface-tint": "#00dbe9"
+            },
+            "borderRadius": {
+                "DEFAULT": "0.25rem",
+                "lg": "0.5rem",
+                "xl": "0.75rem",
+                "full": "9999px"
+            },
+            "spacing": {
+                "gutter": "24px",
+                "margin": "40px",
+                "unit": "4px",
+                "container-max": "1440px"
+            },
+            "fontFamily": {
+                "h3": ["Space Grotesk"],
+                "h2": ["Space Grotesk"],
+                "label-caps": ["Inter"],
+                "body-md": ["Inter"],
+                "h1": ["Space Grotesk"],
+                "body-lg": ["Inter"]
+            },
+            "fontSize": {
+                "h3": ["1.5rem", {"lineHeight": "1.2", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                "h2": ["3rem", {"lineHeight": "1.2", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                "label-caps": ["0.75rem", {"lineHeight": "1", "letterSpacing": "0.15em", "fontWeight": "700"}],
+                "body-md": ["1rem", {"lineHeight": "1.5", "fontWeight": "400"}],
+                "h1": ["4.5rem", {"lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                "body-lg": ["1.125rem", {"lineHeight": "1.6", "fontWeight": "400"}]
+            }
+          },
+        },
+      }
+    </script>
 </head>
-<body>
+<body class="font-body-md text-on-background selection:bg-primary-container selection:text-on-primary-container" data-mode="connect">
+<!-- Top Navigation Shell -->
+<nav class="fixed top-0 w-full z-50 border-b border-cyan-900/30 bg-slate-950/80 backdrop-blur-xl shadow-[0_4px_30px_rgba(0,0,0,0.5)]">
+<div class="flex justify-between items-center w-full px-10 py-4">
+<div class="text-2xl font-black tracking-tighter text-cyan-400 drop-shadow-[0_0_8px_rgba(0,240,255,0.5)] uppercase font-h1">
+                DIMENSIONAL BREAKER
+            </div>
+<div class="hidden md:flex items-center gap-8 font-label-caps uppercase tracking-widest text-sm">
+<a class="text-cyan-400 border-b-2 border-cyan-400 pb-1" href="index.html">Home</a>
+<a class="text-slate-400 hover:text-cyan-200 transition-all" href="#">Gallery</a>
+<a class="text-slate-400 hover:text-cyan-200 transition-all" href="#">About</a>
+</div>
+<div class="flex items-center gap-6">
+<div class="flex gap-4">
+<span class="material-symbols-outlined text-cyan-400 hover:bg-cyan-500/10 hover:shadow-[0_0_15px_rgba(0,240,255,0.3)] p-2 transition-all cursor-pointer">precision_manufacturing</span>
+<span class="material-symbols-outlined text-cyan-400 hover:bg-cyan-500/10 hover:shadow-[0_0_15px_rgba(0,240,255,0.3)] p-2 transition-all cursor-pointer">account_circle</span>
+</div>
+<button class="bg-transparent border border-cyan-400 text-cyan-400 px-6 py-2 font-label-caps tracking-widest hover:bg-cyan-400 hover:text-slate-950 transition-all duration-300 scale-95 active:scale-90" onclick="window.location.href='request.html'">
+                    START REQUEST
+                </button>
+</div>
+</div>
+</nav>
+<main class="pt-24 min-h-screen">
+<!-- Hero Section -->
+<section class="relative px-10 py-20 overflow-hidden min-h-[819px] flex items-center">
+<div class="absolute right-0 top-0 w-2/3 h-full opacity-20 pointer-events-none">
+<img class="w-full h-full object-contain object-right" data-alt="Restyled character artwork of C.C. from Code Geass in a Cyber-Industrial Precision aesthetic with technical overlays and neon cyan accents." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDf32pDFMeqE8gLh1YJSaYA7Xjuv83Wyrh3XD_B7RCyjWgy0Sxdd6i4vYAFrOmtlgUCu10m5eTYTy9I8T6AIyL56n0va7SwbHSgyY8eRxtl67kxH0n4OHFPbBp3p1XIkymBqchxn36x0divDIdltqLl7t2pbqUtdIQLsVOQtsC-DA6oH5rmwok1DT3WOH9XbxJis72gULvrXqV2a5eC0bilkqXBhN172KPZWF9ZWTfZ17g1AGnBbBA16QoycfjR7WkWAOhHlgbow5Fc">
+</div>
+<div class="relative z-10 max-w-4xl">
+<div class="inline-flex items-center gap-3 px-4 py-1 border border-cyan-500/30 bg-cyan-500/10 mb-8">
+<span class="w-2 h-2 bg-cyan-400 rounded-full animate-pulse"></span>
+<span class="font-label-caps text-cyan-400 tracking-[0.3em]">SYSTEM STATUS: OPERATIONAL</span>
+</div>
+<h1 class="font-h1 text-h1 text-primary leading-none mb-6 drop-shadow-[0_0_15px_rgba(0,240,255,0.3)]">
+                    DIMENSIONAL<br>BREAKER
+                </h1>
+<p class="font-body-lg text-on-surface-variant max-w-2xl mb-10 leading-relaxed">Hi, I’m <b class="" data-index-in-node="9" data-path-to-node="2">Leon</b>. I’m a Product Design Engineer with a career built on consumer electronics and capital equipment. As a lifelong ACG enthusiast, I’m using my expertise to provide free 3D printing and craft services local to the Bay Area community. I’m always looking for like-minded makers to join the mission! I'm located near Curpertino.</p>
+<div class="flex gap-6">
+<button class="bg-cyan-500 text-slate-950 px-10 py-5 font-h3 font-black uppercase tracking-widest hover:shadow-[0_0_30px_rgba(0,240,255,0.6)] transition-all mecha-clip" onclick="window.location.href='request.html'">
+                        INITIATE REQUEST
+                    </button>
+<button class="border border-outline-variant px-10 py-5 font-h3 font-bold uppercase tracking-widest hover:border-cyan-400 hover:text-cyan-400 transition-all mecha-clip">
+                        VIEW ARSENAL
+                    </button>
+</div>
+<div class="mt-20 grid grid-cols-3 gap-12 border-t border-cyan-900/30 pt-8">
+<div class="">
+<span class="font-label-caps text-cyan-500 block mb-2">Request</span>
+<span class="font-h3 text-on-surface">2D handsketch/3D file<br>&nbsp;Anything can be accepted!<br></span>
+</div>
+<div class="">
+<span class="font-label-caps text-cyan-500 block mb-2">Make</span>
+<span class="font-h3 text-on-surface">AI powered tools will turn your idea into 3D printable mesh object&nbsp;</span>
+</div>
+<div class="">
+<span class="font-label-caps text-cyan-500 block mb-2">Print</span>
+<span class="font-h3 text-on-surface">Once design is finalized,&nbsp; print starts! You will get an email update to pick up your part</span>
+</div>
+</div>
+</div>
+</section>
+<!-- The "Breaker" Divider -->
+<div class="px-10">
+<div class="h-px w-full bg-cyan-900/50 energy-pulse"></div>
+</div>
+<!-- Mission Section -->
+<section class="px-10 py-32 grid grid-cols-1 md:grid-cols-2 gap-24 items-center">
+<div class="relative">
+<div class="absolute -top-10 -left-10 w-40 h-40 border-t border-l border-cyan-500/40"></div>
+<div class="absolute -bottom-10 -right-10 w-40 h-40 border-b border-r border-cyan-500/40"></div>
+<img class="w-full aspect-square object-cover grayscale brightness-75 hover:grayscale-0 transition-all duration-700" data-alt="A professional 3D printing workshop filled with high-end industrial printers. The room is dark, lit only by the neon blue glow of the machines and digital readouts. In the foreground, a beautifully detailed anime figurine is being precision-printed. The atmosphere is professional, technical, and high-stakes." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDeAmCTKye6h-WlFjKybl6b1F4VU360paau3WaoR2L70DR_rGKxysMABcEHxYzIOMM0DbB1DKspbVOCi2g3hmU5qmpPcIIgA-qJG-5kTrmynhZ_FmqgNHA6aZaa1ErxW6xlYAtD1j90dy1e3O-0XCj2BjlFlO4ep0rgcaMcs2SLySYEjlCu7-Sv7LaEVRW7zd11amdUo_TpRSYlNFsfQSGtUEvObM5EL3T_C5HhmCBAtwxCM2Fsddg437QPFA0THQW6kLXyGcPtj4gt">
+<div class="absolute top-4 right-4 bg-slate-950/80 backdrop-blur-md p-4 border border-cyan-500/30 font-label-caps text-[10px] tracking-tighter">
+                    COORDINATE_READOUT: X45.2 Y90.1 Z12.4
+                </div>
+</div>
+<div class="space-y-8">
+<span class="font-label-caps text-secondary uppercase tracking-[0.5em]">PROTOCOL: MISSION_01</span>
+<h2 class="font-h2 text-h2 text-on-primary">BEYOND PROFIT: THE CREATIVE CRUSADE</h2>
+<p class="font-body-lg text-on-surface-variant leading-relaxed">
+                    Dimensional Breaker is a <span class="text-secondary font-bold">Not-for-Profit</span> initiative dedicated to anime, manga, and gaming fans. My mission is simple: to provide fellow enthusiasts with access to top-grade 3D printing and craft making.</p>
+<div class="grid grid-cols-1 gap-6 pt-6">
+<div class="glass-panel p-6 border border-outline-variant hover:border-cyan-400 transition-colors">
+<h4 class="font-h3 text-cyan-400 mb-2 uppercase">Disclaimer</h4>
+<p class="text-sm text-on-surface-variant">While I strive to get best results, this is a small hobbyist project for recreational purpose, not for professional mass production. Please contact me directly to coordinate larger projects.</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Features Bento Grid -->
+<section class="px-10 py-32 bg-surface-container-lowest relative overflow-hidden">
+<div class="max-w-7xl mx-auto">
+<div class="mb-20 flex flex-col md:flex-row justify-between items-end gap-8">
+<div class="">
+<span class="font-label-caps text-cyan-500 block mb-4 tracking-[0.4em]">SYSTEM_CAPABILITIES</span>
+<h2 class="font-h2 text-h2 text-on-surface">TECHNICAL MASTERY</h2>
+</div>
+<div class="max-w-md text-right">
+<p class="text-on-surface-variant font-body-md italic">"Precision is not an accident; it is the result of focused mechanical intent."</p>
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-12 gap-6">
+<div class="md:col-span-8 glass-panel border border-cyan-900/30 p-10 relative group">
+<div class="absolute top-0 right-0 p-4 font-label-caps text-[10px] text-cyan-900">FS-01-PRECISION</div>
+<span class="material-symbols-outlined text-5xl text-cyan-400 mb-6" data-weight="fill">precision_manufacturing</span>
+<h3 class="font-h3 text-on-surface mb-4">3D PRINTING&nbsp;</h3>
+<p class="text-on-surface-variant max-w-xl">Currently available print machine: Bambu Lab A1 . Perfect for intricate armor sets, character statues, and mechanical props that demand fidelity. Max dimension (256 x 256 x 256 mm). Our shop utilize AI tools to turn 2D image into actual 3D objects allowing any concept to be created.</p><div class="">More tools will be online in the future!</div><p class=""></p>
+<div class="mt-8 flex gap-4">
+<span class="px-3 py-1 bg-cyan-950 text-cyan-400 font-label-caps text-[10px] rounded"><br></span>
+<span class="px-3 py-1 bg-cyan-950 text-cyan-400 font-label-caps text-[10px] rounded">FDM</span>
+<span class="px-3 py-1 bg-cyan-950 text-cyan-400 font-label-caps text-[10px] rounded"><br></span>
+</div>
+</div>
+<div class="md:col-span-4 bg-cyan-400 p-10 flex flex-col justify-between group cursor-pointer hover:bg-cyan-300 transition-colors">
+<span class="material-symbols-outlined text-5xl text-slate-950" data-weight="fill">science</span>
+<div class="">
+<h3 class="font-h3 text-slate-950 mb-2">Lead time</h3>
+<p class="text-slate-900 text-sm">Aim to be ready in 24-48 hours for any single pass print job!</p>
+</div>
+</div>
+<div class="md:col-span-4 glass-panel border border-secondary-container/30 p-10 group">
+<span class="material-symbols-outlined text-5xl text-secondary mb-6">group</span>
+<h3 class="font-h3 text-on-surface mb-4">COMMUNITY FOCUS</h3>
+<p class="text-on-surface-variant text-sm">Direct collaboration via Discord/Wechat. You're not just a stranger; you're a friend&amp;co-creator in the fabrication process.</p>
+</div>
+<div class="md:col-span-8 relative h-[300px] group overflow-hidden">
+<img class="w-full h-full object-cover grayscale brightness-50 group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700" data-alt="A macro close-up of a 3D printer nozzle extruding glowing neon material to form a complex geometric part. The lighting is dark and moody with intense cyan and pink highlights. High-speed shutter effects capture the precision and movement of the machine. The aesthetic is purely mecha-industrial and futuristic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCxlCk_rES5Th2WzlfhsymVUAAK2a2fstRvS1LOAUU5mafcUiGp0BGX8ae6tA2v5uZf2mfQVn8MUXYgVLh8XAA1lm4tASEQMI1g-Uq0nQ3aQusJB0aaa1lFDYlYlnb6waBxLvIxRQwVibXfT7ssP6Kiw1aeZXdKZPTdbrV-e0-PQDWWYIY6ROto3gNaCh0WPFd71SHQfDO82umMFtoDwrWLYBD4qSSuvinj0XTK2us0rFu2ZojmKBAn6lROGKaoiD064YAQC1YxNoSF">
+<div class="absolute inset-0 bg-gradient-to-t from-slate-950 to-transparent p-10 flex items-end">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-full border-2 border-cyan-400 flex items-center justify-center">
+<span class="material-symbols-outlined text-cyan-400">play_arrow</span>
+</div>
+<span class="font-label-caps text-on-surface tracking-widest">LIVE_WORKSHOP_FEED</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- CTA Section -->
+<section class="px-10 py-32 flex flex-col items-center text-center">
+<div class="max-w-3xl glass-panel border border-cyan-400 p-20 relative mecha-clip">
+<div class="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-slate-950 px-8 py-2 border border-cyan-400 font-label-caps text-cyan-400">
+                    REQUEST_PORTAL_V2.0
+                </div>
+<h2 class="font-h1 text-h2 text-primary mb-8 tracking-tighter">READY TO BREAK<br>THE DIMENSION?</h2>
+<p class="font-body-lg text-on-surface-variant mb-12">Submit your 3D files or project concept. I will reach out to collaborate.</p>
+<button class="w-full bg-cyan-400 text-slate-950 font-h3 font-black py-6 uppercase tracking-[0.2em] hover:shadow-[0_0_50px_rgba(0,240,255,0.4)] transition-all flex items-center justify-center gap-4" onclick="window.location.href='request.html'">
+<span class="material-symbols-outlined">bolt</span>
+                    INITIATE REQUEST
+                    <span class="material-symbols-outlined">bolt</span>
+</button>
+<div class="mt-8 flex justify-center gap-12 font-label-caps text-[10px] text-cyan-900 tracking-[0.2em]">
+<span class="">ESTIMATED QUEUE:&nbsp; DAYS</span>
+<span class="">SYSTEM UPTIME: 99.8%</span>
+<span class="">CURRENT PROJECTS:&nbsp;</span>
+</div>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="w-full border-t border-slate-800 mt-auto bg-slate-950">
+<div class="flex flex-col md:flex-row justify-between items-center px-10 py-12 gap-6">
+<div class="text-lg font-bold text-slate-200 font-h2 uppercase tracking-tighter">
+                DIMENSIONAL BREAKER
+            </div>
+<div class="flex flex-wrap justify-center gap-8 font-['Space_Grotesk'] text-[10px] tracking-[0.2em] uppercase">
+<a class="text-slate-500 hover:text-cyan-400 transition-colors" href="#">Technical Specs</a>
+<a class="text-slate-500 hover:text-cyan-400 transition-colors" href="#">Material Safety</a>
+<a class="text-slate-500 hover:text-cyan-400 transition-colors" href="#">Terms of Engagement</a>
+<a class="text-slate-500 hover:text-cyan-400 transition-colors" href="#">Privacy</a>
+</div>
+<div class="font-['Space_Grotesk'] text-[10px] tracking-[0.2em] uppercase text-slate-500 text-center md:text-right">
+                © 2024 DIMENSIONAL BREAKER // MECHA-INDUSTRIAL DIVISION // ALL RIGHTS RESERVED
+            </div>
+</div>
+</footer>
 
-  <!-- NAVBAR -->
-  <nav>
-    <a class="nav-logo" href="index.html">Dimensional Breaker</a>
-    <ul class="nav-links">
-      <li><a href="#about">Home</a></li>
-      <li><a href="#gallery">Gallery</a></li>
-      <li><a href="#about">About</a></li>
-    </ul>
-    <a class="nav-cta" href="request.html" id="nav-submit-request">Submit Request</a>
-  </nav>
 
-  <!-- HERO -->
-  <section class="hero" id="home">
-    <div class="hero-label fade-up">Bay Area · ACG · Not-for-Profit</div>
-    <h1 class="fade-up delay-1">DIMENSIONAL<br/><span>BREAKER</span></h1>
-    <p class="hero-sub fade-up delay-2">3D Printing & Craft Workshop</p>
-    <p class="hero-bio fade-up delay-3">
-      Hi, I'm Leon — a Product Design Engineer with a career built on consumer electronics and capital equipment.
-      As a lifelong ACG enthusiast, I'm using my expertise to provide free 3D printing and craft services
-      to the local Bay Area community.
-    </p>
-    <div class="hero-actions fade-up delay-4">
-      <a class="btn-primary" href="request.html" id="hero-submit-request">Submit a Request</a>
-      <a class="btn-secondary" href="#about" id="hero-learn-more">Learn More</a>
-    </div>
-  </section>
 
-  <div class="breaker"></div>
 
-  <!-- MISSION -->
-  <section id="about">
-    <div class="section-label">Mission</div>
-    <h2 class="section-title">Beyond Profit:<br/>The Creative Crusade</h2>
-    <div class="about-grid">
-      <div class="glass-panel">
-        <div class="panel-label">Initiative</div>
-        <div class="panel-title">Not-for-Profit</div>
-        <p class="panel-body">
-          Dimensional Breaker is a not-for-profit initiative dedicated to anime, manga, and gaming fans.
-          My mission is simple: to provide fellow enthusiasts with access to top-grade 3D printing and craft making.
-        </p>
-        <div class="panel-stat">
-          <span class="stat-value">FREE</span>
-          <span class="stat-label">Bay Area Community Service</span>
-        </div>
-      </div>
-      <div class="glass-panel">
-        <div class="panel-label">Community</div>
-        <div class="panel-title">Co-Creators Welcome</div>
-        <p class="panel-body">
-          Direct collaboration via Discord &amp; WeChat. You're not just a stranger — you're a friend
-          and co-creator in the fabrication process. I'm always looking for like-minded makers to join the mission.
-        </p>
-        <div class="panel-stat">
-          <span class="stat-value">24–48h</span>
-          <span class="stat-label">Lead Time (Single Pass Print)</span>
-        </div>
-      </div>
-    </div>
-    <div class="disclaimer">
-      <p><strong>Disclaimer:</strong> While I strive for best results, this is a small hobbyist project for recreational purposes,
-      not professional mass production. Please contact me directly to coordinate larger projects.</p>
-    </div>
-  </section>
 
-  <div class="breaker"></div>
 
-  <!-- SPECS -->
-  <section id="specs">
-    <div class="section-label">Equipment</div>
-    <h2 class="section-title">Technical Mastery</h2>
-    <div class="specs-grid">
-      <div class="glass-panel">
-        <div class="spec-chip">3D Printing</div>
-        <div class="panel-title">Bambu Lab A1</div>
-        <p class="panel-body">
-          Perfect for intricate armor sets, character statues, and mechanical props that demand fidelity.
-          Our shop utilizes AI tools to turn 2D images into actual 3D objects — any concept can be created.
-        </p>
-        <div class="panel-stat">
-          <span class="stat-value">256<sup style="font-size:1.2rem">³</sup></span>
-          <span class="stat-label">Max Build Volume (mm)</span>
-        </div>
-      </div>
-      <div class="glass-panel">
-        <div class="spec-chip">Capabilities</div>
-        <div class="panel-title">What We Print</div>
-        <p class="panel-body">
-          Armor sets · Character statues · Mechanical props · Cosplay accessories · Figurines ·
-          Custom parts · Concept models. If you can imagine it, we can fabricate it.
-        </p>
-      </div>
-      <div class="glass-panel">
-        <div class="spec-chip">Process</div>
-        <div class="panel-title">How It Works</div>
-        <p class="panel-body">
-          Submit your request using our email generator. Attach your 3D files (.STL/.OBJ/.3MF) to the email.
-          I'll review your specs and reach out via Discord or WeChat to coordinate.
-        </p>
-      </div>
-    </div>
-  </section>
-
-  <div class="quote-block">
-    <p class="quote-text">"Precision is not an accident; it is the result of <strong>focused mechanical intent.</strong>"</p>
-    <p class="quote-attr">— Dimensional Breaker Workshop</p>
-  </div>
-
-  <div class="breaker"></div>
-
-  <!-- GALLERY -->
-  <section id="gallery">
-    <div class="section-label">Gallery</div>
-    <h2 class="section-title">Workshop Output</h2>
-    <div class="gallery-placeholder">
-      [ GALLERY COMING SOON — PRINTS WILL BE DISPLAYED HERE ]
-    </div>
-  </section>
-
-  <div class="breaker"></div>
-
-  <!-- CTA -->
-  <section id="request">
-    <h2 class="cta-title">Ready to Break<br/><span>the Dimension?</span></h2>
-    <p class="cta-sub">Submit your 3D files or project concept. I will reach out to collaborate.</p>
-    <a class="btn-primary" href="request.html" id="cta-submit-request" style="font-size:0.875rem; padding:16px 40px;">
-      Initialize Service Request →
-    </a>
-  </section>
-
-  <!-- FOOTER -->
-  <footer>
-    <span class="footer-logo">Dimensional Breaker</span>
-    <div class="footer-links">
-      <a href="#specs" id="footer-specs">Technical Specs</a>
-      <a href="#" id="footer-safety">Material Safety</a>
-      <a href="#" id="footer-terms">Terms of Engagement</a>
-      <a href="#" id="footer-privacy">Privacy</a>
-    </div>
-    <span class="footer-copy">© 2025 Dimensional Breaker Division</span>
-  </footer>
-
-</body>
-</html>
+</body></html>
