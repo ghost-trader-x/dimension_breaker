@@ -166,7 +166,7 @@
             updateJSON();
             const text = document.getElementById('jsonOutput').textContent;
             const subjectLine = document.getElementById('subjectOutput') ? document.getElementById('subjectOutput').textContent : "Dimensional Breaker Service Request";
-            const mailtoUrl = "mailto:?subject=" + encodeURIComponent(subjectLine) + "&body=" + encodeURIComponent("Here is my service request payload:\n\n" + text + "\n\n(Please remember to attach your 3D files before sending!)");
+            const mailtoUrl = "mailto:traderxiang886@gmail.com?subject=" + encodeURIComponent(subjectLine) + "&body=" + encodeURIComponent("Here is my service request payload:\n\n" + text + "\n\n(Please remember to attach your 3D files before sending!)");
             navigator.clipboard.writeText(text).then(() => {
                 alert('JSON copied to clipboard! Opening email client...');
                 window.location.href = mailtoUrl;
@@ -380,7 +380,7 @@
 <span class="material-symbols-outlined text-primary-container">info</span>
 </div>
 <div class="space-y-4">
-<p class="font-body-md text-on-surface-variant">This form generates a standardized JSON payload detailing your technical specifications. The generated JSON must be copied, pasted into an email, and sent to the workshop along with any relevant 3D schematics as attachments.</p><div class="">Your request will be processed by an AI agent and I will reach out for confirmation!</div><p class=""></p>
+<p class="font-body-md text-on-surface-variant">This form generates a standardized JSON payload detailing your technical specifications. The generated JSON must be copied, pasted into an email, and sent to <a href="mailto:traderxiang886@gmail.com" class="text-cyan-400 hover:text-cyan-300 transition-colors">traderxiang886@gmail.com</a> along with any relevant 3D schematics as attachments. You can also reach out via Discord: <span class="text-cyan-400 font-mono">1220539221396295692</span>.</p><div class="">Your request will be processed by an AI agent and I will reach out for confirmation!</div><p class=""></p>
 </div>
 <div class="bg-surface-container-lowest p-6 border border-outline-variant space-y-4">
 <div class="space-y-2 pb-4 border-b border-outline-variant/50">
