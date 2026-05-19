@@ -126,7 +126,10 @@
             const colorDetails = document.getElementById('colorDetails').value || '';
             const additionalNotes = document.getElementById('additionalNotes').value || '';
 
+            const subjectLine = `Dimensional Breaker: ${project}_${requester}`;
+
             const jsonData = {
+                "email_subject": subjectLine,
                 "requester": requester,
                 "project": project,
                 "contact_email": email,
@@ -145,6 +148,11 @@
             };
 
             document.getElementById('jsonOutput').textContent = JSON.stringify(jsonData, null, 2);
+            
+            const subjectOutput = document.getElementById('subjectOutput');
+            if(subjectOutput) {
+                subjectOutput.textContent = subjectLine;
+            }
         }
 
         function copyToClipboard() {
@@ -157,7 +165,8 @@
         function generateEmail() {
             updateJSON();
             const text = document.getElementById('jsonOutput').textContent;
-            const mailtoUrl = "mailto:?subject=Dimensional Breaker - Service Request&body=" + encodeURIComponent("Here is my service request payload:\n\n" + text + "\n\n(Please remember to attach your 3D files before sending!)");
+            const subjectLine = document.getElementById('subjectOutput') ? document.getElementById('subjectOutput').textContent : "Dimensional Breaker Service Request";
+            const mailtoUrl = "mailto:?subject=" + encodeURIComponent(subjectLine) + "&body=" + encodeURIComponent("Here is my service request payload:\n\n" + text + "\n\n(Please remember to attach your 3D files before sending!)");
             navigator.clipboard.writeText(text).then(() => {
                 alert('JSON copied to clipboard! Opening email client...');
                 window.location.href = mailtoUrl;
@@ -179,7 +188,7 @@
 <div class="flex items-center gap-4">
 <button class="material-symbols-outlined text-cyan-400 p-2 hover:bg-cyan-500/10 transition-all rounded">precision_manufacturing</button>
 <button class="material-symbols-outlined text-cyan-400 p-2 hover:bg-cyan-500/10 transition-all rounded">account_circle</button>
-<button class="bg-primary-container text-on-primary-container font-['Space_Grotesk'] uppercase tracking-widest text-sm px-6 py-2 border border-cyan-400 hover:shadow-[0_0_15px_rgba(0,240,255,0.3)] transition-all scale-95 active:scale-90">START REQUEST</button>
+<button class="bg-primary-container text-on-primary-container font-['Space_Grotesk'] uppercase tracking-widest text-sm px-6 py-2 border border-cyan-400 hover:shadow-[0_0_15px_rgba(0,240,255,0.3)] transition-all scale-95 active:scale-90">Generate request</button>
 </div>
 </nav>
 <main class="flex-grow pt-32 pb-20 px-gutter container mx-auto max-w-[1200px]">
@@ -374,6 +383,10 @@
 <p class="font-body-md text-on-surface-variant">This form generates a standardized JSON payload detailing your technical specifications. The generated JSON must be copied, pasted into an email, and sent to the workshop along with any relevant 3D schematics as attachments.</p><div class="">Your request will be processed by an AI agent and I will reach out for confirmation!</div><p class=""></p>
 </div>
 <div class="bg-surface-container-lowest p-6 border border-outline-variant space-y-4">
+<div class="space-y-2 pb-4 border-b border-outline-variant/50">
+<div class="font-label-caps text-label-caps text-on-surface-variant uppercase">Generated Subject Line</div>
+<div class="text-sm font-mono text-cyan-400 break-words" id="subjectOutput">Dimensional Breaker: _</div>
+</div>
 <div class="flex justify-between items-center mb-2">
 <div class="font-label-caps text-label-caps text-on-surface-variant uppercase">Generated Email Request</div>
 <button class="text-primary-container hover:text-cyan-300 transition-colors" onclick="copyToClipboard()" title="Copy to Clipboard">
@@ -381,6 +394,7 @@
 </button>
 </div>
 <pre class="text-sm font-mono text-cyan-400 overflow-auto max-h-64" id="jsonOutput">{
+  "email_subject": "Dimensional Breaker: _",
   "requester": "",
   "project": "",
   "contact_email": "",
@@ -393,7 +407,7 @@
   },
   "requirements": {
     "description": "",
-    "color_details": "PROVIDE DETAILS FOR OTHER/MULTI-COLOR ",
+    "color_details": "",
     "additional_notes": ""
   }
 }</pre>
